@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>BPMN Editor</title>
+  <style>
+    html, body, #canvas {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    #buttons {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 1000;
+      background: white;
+      padding: 5px;
+      border-radius: 5px;
+    }
+  </style>
+  <script src="https://unpkg.com/bpmn-js/dist/bpmn-modeler.development.js"></script>
+</head>
+<body>
+  <div id="buttons">
+    <button onclick="downloadDiagram()">Скачать диаграмму</button>
+  </div>
+  <div id="canvas"></div>
+
+  <script>
+    const bpmnModeler = new BpmnJS({ container: '#canvas' });
+
+    const diagram = `<?xml version="1.0" encoding="UTF-8"?>
+      <bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                        xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                        id="Definitions_1"
+                        targetNamespace="http://bpmn.io/schema/bpmn">
+        <bpmn:process id="Process_1" isExecutable="false"/>
+        <bpmn:diagram id="BPMNDiagram_1">
+          <bpmn:plane id="BPMNPlane_1" bpmnElement="Process_1" />
+        </bpmn:diagram>
+      </bpmn:definitions>`;
+
+    bpmnModeler.importXML(diagram).then(() => {
+      console.log("Диаграмма загружена");
+    });
+
+    async function downloadDiagram() {
+      const { xml } = await bpmnModeler.saveXML({ format: true });
+      const blob = new Blob([xml], { type: "application/xml" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "diagram.bpmn";
+      link.click();
+    }
+  </script>
+</body>
+</html>
