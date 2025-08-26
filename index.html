@@ -19,17 +19,22 @@
       border-radius: 5px;
     }
   </style>
+  <!-- подключаем bpmn-js -->
   <script src="https://unpkg.com/bpmn-js/dist/bpmn-modeler.development.js"></script>
 </head>
 <body>
   <div id="buttons">
-    <button onclick="downloadDiagram()">Скачать диаграмму</button>
+    <button onclick="downloadDiagram()">Скачать BPMN</button>
   </div>
   <div id="canvas"></div>
 
   <script>
-    const bpmnModeler = new BpmnJS({ container: '#canvas' });
+    // Создаём редактор (Modeler)
+    const bpmnModeler = new BpmnJS({
+      container: '#canvas'
+    });
 
+    // Загружаем пустую схему
     const diagram = `<?xml version="1.0" encoding="UTF-8"?>
       <bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                         xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
@@ -45,6 +50,7 @@
       console.log("Диаграмма загружена");
     });
 
+    // Функция скачивания диаграммы
     async function downloadDiagram() {
       const { xml } = await bpmnModeler.saveXML({ format: true });
       const blob = new Blob([xml], { type: "application/xml" });
